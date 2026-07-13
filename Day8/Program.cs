@@ -1,26 +1,40 @@
 ﻿using System;
 
-namespace UniInternship2026.Day08
+namespace UniInternship2026.Day09
 {
     class Program
     {
         static void Main(string[] args)
         {
-            // Set up system flags
-            string systemName = "University Management System Core";
-            string version = "1.0.0-alpha";
-            DateTime bootTime = DateTime.Now;
-
             Console.WriteLine("=================================================");
-            Console.WriteLine($"INITIALIZING: {systemName}");
-            Console.WriteLine($"VERSION: {version}");
-            Console.WriteLine($"SYSTEM BOOT TIME: {bootTime}");
+            Console.WriteLine("        DAY 9: DATA TRACKING & TYPE PIPELINES   ");
             Console.WriteLine("=================================================");
 
-            // Simulate core subsystem check
-            Console.WriteLine("[SUCCESS] Memory Management Pipeline: OK");
-            Console.WriteLine("[SUCCESS] Relational Data Mapping Layer: OK");
-            Console.WriteLine("\nBackend Core Bootstrapped Successfully. Ready for business logic.");
+            // 1. Primitive Type Declarations
+            int studentId = 100245;
+            string firstName = "Husein";
+            string lastName = "Melli";
+            string email = "h.melli@university.edu";
+            double studentGpa = 3.85;
+            char academicGrade = 'A';
+            bool isEnrolledActive = true;
+
+            // 2. Data Processing and Output Pipeline
+            Console.WriteLine($"[RECORD ARCHIVE] processing data for ID: {studentId}");
+            Console.WriteLine($"Student Full Name : {firstName} {lastName}");
+            Console.WriteLine($"Contact Registry  : {email}");
+            Console.WriteLine($"Current Metrics   : GPA {studentGpa} | Performance Class: {academicGrade}");
+            
+            // 3. Conditional Status Verification Logic
+            if (isEnrolledActive)
+            {
+                Console.WriteLine("System Status     : ACTIVE (Account clear for course selection)");
+            }
+            else
+            {
+                Console.WriteLine("System Status     : SUSPENDED / INACTIVE");
+            }
+
             Console.WriteLine("=================================================");
         }
     }
