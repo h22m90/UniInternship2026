@@ -1,51 +1,39 @@
 using System;
+using UniInternship2026.Day11; // Directing to our inheritance namespace
 
 namespace UniInternship2026.Day10
 {
-    public class Student
+    // Student inherits from Person
+    public class Student : Person
     {
-        // 1. Private Fields (Encapsulated Data)
         private int _studentId;
-        private string _firstName;
-        private string _lastName;
         private double _gpa;
 
-        // 2. Public Properties (Safe Access Gates)
         public int StudentId => _studentId;
-        public string FullName => $"{_firstName} {_lastName}";
         
         public double Gpa
         {
             get => _gpa;
-            // Business logic constraint: prevent invalid GPAs from being set
             set
             {
-                if (value >= 0.0 && value <= 4.0)
-                {
-                    _gpa = value;
-                }
-                else
-                {
-                    Console.WriteLine($"[WARNING] Invalid GPA assignment ({value}) ignored. Keeping current GPA.");
-                }
+                if (value >= 0.0 && value <= 4.0) _gpa = value;
             }
         }
 
-        // 3. Constructor (Object Initializer)
-        public Student(int studentId, string firstName, string lastName, double initialGpa)
+        // The constructor uses 'base' to pass the name and email up to the Parent constructor
+        public Student(int studentId, string firstName, string lastName, string email, double initialGpa) 
+            : base(firstName, lastName, email)
         {
             _studentId = studentId;
-            _firstName = firstName;
-            _lastName = lastName;
-            Gpa = initialGpa; // Uses the property validation logic
+            Gpa = initialGpa;
         }
 
-        // 4. Object Behavior Method
-        public void PrintProfile()
+        // Override the parent PrintProfile to add student-specific details
+        public override void PrintProfile()
         {
-            Console.WriteLine($"Student ID : {_studentId}");
-            Console.WriteLine($"Full Name  : {FullName}");
-            Console.WriteLine($"Current GPA: {Gpa:F2}");
+            Console.WriteLine($"--- STUDENT RECORD ({_studentId}) ---");
+            base.PrintProfile(); // Calls the parent PrintProfile first (Name & Email)
+            Console.WriteLine($"GPA  : {Gpa:F2}");
         }
     }
 }
