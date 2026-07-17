@@ -35,5 +35,10 @@ namespace UniInternship2026.Day10
             base.PrintProfile(); // Calls the parent PrintProfile first (Name & Email)
             Console.WriteLine($"GPA  : {Gpa:F2}");
         }
+        // Add this method inside your Student class in Student.cs
+        public override string GetLoginPortal()
+        {
+            return "https://student.university.edu/portal";
+        }
     }
 }

@@ -24,5 +24,10 @@ namespace UniInternship2026.Day12
             base.PrintProfile(); // Prints Name and Email from Person
             Console.WriteLine($"Department: {_department}");
         }
+        // Add this method inside your Instructor class in Instructor.cs
+        public override string GetLoginPortal()
+        {
+            return "https://faculty.university.edu/dashboard";
+        }
     }
 }

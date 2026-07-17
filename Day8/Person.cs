@@ -2,9 +2,9 @@ using System;
 
 namespace UniInternship2026.Day11
 {
-    public class Person
+    // The 'abstract' keyword prevents this class from being created with 'new Person()'
+    public abstract class Person
     {
-        // Protected fields can only be accessed by this class and its child classes
         protected string _firstName;
         protected string _lastName;
         protected string _email;
@@ -12,7 +12,6 @@ namespace UniInternship2026.Day11
         public string FullName => $"{_firstName} {_lastName}";
         public string Email => _email;
 
-        // Parent Constructor
         public Person(string firstName, string lastName, string email)
         {
             _firstName = firstName;
@@ -20,11 +19,13 @@ namespace UniInternship2026.Day11
             _email = email;
         }
 
-        // Virtual method allows child classes to override (customize) this behavior
         public virtual void PrintProfile()
         {
             Console.WriteLine($"Name : {FullName}");
             Console.WriteLine($"Email: {_email}");
         }
+
+        // Abstract Method: No body {} allowed here. Child classes MUST implement this.
+        public abstract string GetLoginPortal();
     }
 }

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UniInternship2026.Day11; // Base Person namespace
-using UniInternship2026.Day10; // Student namespace
-using UniInternship2026.Day12; // Instructor namespace
+using UniInternship2026.Day11;
+using UniInternship2026.Day10;
+using UniInternship2026.Day12;
 
 namespace UniInternship2026.Day08
 {
@@ -11,21 +11,21 @@ namespace UniInternship2026.Day08
         static void Main(string[] args)
         {
             Console.WriteLine("=================================================");
-            Console.WriteLine("        DAY 12: POLYMORPHISM IN ACTION          ");
+            Console.WriteLine("        DAY 13: OOP ABSTRACTION CONTRACTS       ");
             Console.WriteLine("=================================================");
 
-            // 1. Create a generic list that holds the parent class type "Person"
-            List<Person> universityRegistry = new List<Person>();
+            List<Person> universityRegistry = new List<Person>
+            {
+                new Student(100245, "Husein", "Melli", "h.melli@university.edu", 3.85),
+                new Instructor("Zeynep", "Kaya", "z.kaya@university.edu", "Computer Engineering")
+            };
 
-            // 2. Add both Student and Instructor objects to the same registry list
-            universityRegistry.Add(new Student(100245, "Husein", "Melli", "h.melli@university.edu", 3.85));
-            universityRegistry.Add(new Instructor("Zeynep", "Kaya", "z.kaya@university.edu", "Computer Engineering"));
-
-            // 3. Loop through the collection and dynamically print profiles
-            Console.WriteLine("[SYSTEM] Processing unified registry database:\n");
+            Console.WriteLine("[SYSTEM] Running Gateway Portal Access Checks:\n");
             foreach (Person person in universityRegistry)
             {
-                person.PrintProfile();
+                Console.WriteLine($"User: {person.FullName}");
+                // Calling the abstract contract method seamlessly via polymorphism
+                Console.WriteLine($"Target Security Portal: {person.GetLoginPortal()}");
                 Console.WriteLine("-------------------------------------------------");
             }
 
