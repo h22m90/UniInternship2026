@@ -1,33 +1,34 @@
 using System;
 using UniInternship2026.Day11;
+using UniInternship2026.Day14; // Include the new interface namespace
 
 namespace UniInternship2026.Day12
 {
-    // Instructor inherits from Person
-    public class Instructor : Person
+    // Instructor inherits from Person AND implements INotifiable
+    public class Instructor : Person, INotifiable
     {
         private string _department;
-
         public string Department => _department;
 
-        // Constructor passes name and email to the parent Person class
         public Instructor(string firstName, string lastName, string email, string department)
             : base(firstName, lastName, email)
         {
             _department = department;
         }
 
-        // Override the parent PrintProfile to customize for instructors
         public override void PrintProfile()
         {
             Console.WriteLine($"--- INSTRUCTOR RECORD ---");
-            base.PrintProfile(); // Prints Name and Email from Person
+            base.PrintProfile();
             Console.WriteLine($"Department: {_department}");
         }
-        // Add this method inside your Instructor class in Instructor.cs
-        public override string GetLoginPortal()
+
+        public override string GetLoginPortal() => "https://faculty.university.edu/dashboard";
+
+        // Implementation of the INotifiable contract
+        public void SendAlert(string message)
         {
-            return "https://faculty.university.edu/dashboard";
+            Console.WriteLine($"[EMAIL SENT] To Faculty {FullName} ({Email}): \"{message}\"");
         }
     }
 }
