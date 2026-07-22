@@ -1,43 +1,59 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
-using UniInternship2026.Day10; // Importing Student model
+using UniInternship2026.Day10;
+using UniInternship2026.Day12;
 
 namespace UniInternship2026.Day08
 {
     class Program
     {
-        // 1. Mark Main as async Task so the entry point supports asynchronous execution
         static async Task Main(string[] args)
         {
             Console.WriteLine("=================================================");
-            Console.WriteLine("        DAY 15: ASYNCHRONOUS BACKEND PIPELINES  ");
+            Console.WriteLine("        DAY 16: PARALLEL ASYNC PIPELINES        ");
             Console.WriteLine("=================================================");
 
-            Console.WriteLine("[SYSTEM] Requesting student record from database...");
+            // Stopwatch to measure exact execution performance
+            Stopwatch stopwatch = Stopwatch.StartNew();
 
-            // 2. Await the long-running asynchronous task
-            Student student = await FetchStudentFromDatabaseAsync(100245);
+            Console.WriteLine("[SYSTEM] Triggering concurrent queries for multiple records...");
 
-            Console.WriteLine("\n[SYSTEM] Data pipeline task resolved successfully!");
+            // 1. Kick off tasks concurrently WITHOUT awaiting them immediately
+            Task<Student> studentTask = FetchStudentAsync(100245, "Husein", "Melli");
+            Task<Instructor> instructorTask = FetchInstructorAsync("Zeynep", "Kaya", "Computer Engineering");
+
+            // 2. Wait for BOTH tasks to complete simultaneously using Task.WhenAll
+            await Task.WhenAll(studentTask, instructorTask);
+
+            // 3. Extract the finished results from the completed tasks
+            Student student = await studentTask;
+            Instructor instructor = await instructorTask;
+
+            stopwatch.Stop();
+
+            Console.WriteLine("\n[SYSTEM] All parallel tasks resolved successfully!");
             Console.WriteLine("-------------------------------------------------");
             student.PrintProfile();
+            Console.WriteLine();
+            instructor.PrintProfile();
+            Console.WriteLine("-------------------------------------------------");
+            Console.WriteLine($"[PERFORMANCE] Total Execution Time: {stopwatch.ElapsedMilliseconds} ms");
             Console.WriteLine("=================================================");
         }
 
-        /// <summary>
-        /// Simulates fetching a student record asynchronously from a database disk or network.
-        /// </summary>
-        static async Task<Student> FetchStudentFromDatabaseAsync(int studentId)
+        static async Task<Student> FetchStudentAsync(int id, string firstName, string lastName)
         {
-            Console.WriteLine($"[DATABASE] Initiating query for ID: {studentId}...");
+            Console.WriteLine($"[DB MOCK] Fetching student {firstName}...");
+            await Task.Delay(2000); // Simulate 2-second database latency
+            return new Student(id, firstName, lastName, "h.melli@university.edu", 3.85);
+        }
 
-            // Simulate a 2.5-second network/database latency without blocking the main system thread
-            await Task.Delay(2500);
-
-            Console.WriteLine("[DATABASE] Query completed. Record retrieved.");
-
-            // Return the retrieved student instance
-            return new Student(studentId, "Husein", "Melli", "h.melli@university.edu", 3.85);
+        static async Task<Instructor> FetchInstructorAsync(string firstName, string lastName, string department)
+        {
+            Console.WriteLine($"[DB MOCK] Fetching instructor {firstName}...");
+            await Task.Delay(2000); // Simulate 2-second database latency
+            return new Instructor(firstName, lastName, "z.kaya@university.edu", department);
         }
     }
 }
