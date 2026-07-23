@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using UniInternship2026.Day10;
-using UniInternship2026.Day12;
 
 namespace UniInternship2026.Day08
 {
@@ -11,49 +9,56 @@ namespace UniInternship2026.Day08
         static async Task Main(string[] args)
         {
             Console.WriteLine("=================================================");
-            Console.WriteLine("        DAY 16: PARALLEL ASYNC PIPELINES        ");
+            Console.WriteLine("        DAY 17: ASYNCHRONOUS EXCEPTION HANDLING ");
             Console.WriteLine("=================================================");
 
-            // Stopwatch to measure exact execution performance
-            Stopwatch stopwatch = Stopwatch.StartNew();
+            // 1. Attempting a successful query
+            Console.WriteLine("\n[SCENARIO 1] Executing valid database query...");
+            await FetchStudentWithSafetyAsync(100245, shouldFail: false);
 
-            Console.WriteLine("[SYSTEM] Triggering concurrent queries for multiple records...");
-
-            // 1. Kick off tasks concurrently WITHOUT awaiting them immediately
-            Task<Student> studentTask = FetchStudentAsync(100245, "Husein", "Melli");
-            Task<Instructor> instructorTask = FetchInstructorAsync("Zeynep", "Kaya", "Computer Engineering");
-
-            // 2. Wait for BOTH tasks to complete simultaneously using Task.WhenAll
-            await Task.WhenAll(studentTask, instructorTask);
-
-            // 3. Extract the finished results from the completed tasks
-            Student student = await studentTask;
-            Instructor instructor = await instructorTask;
-
-            stopwatch.Stop();
-
-            Console.WriteLine("\n[SYSTEM] All parallel tasks resolved successfully!");
             Console.WriteLine("-------------------------------------------------");
-            student.PrintProfile();
-            Console.WriteLine();
-            instructor.PrintProfile();
-            Console.WriteLine("-------------------------------------------------");
-            Console.WriteLine($"[PERFORMANCE] Total Execution Time: {stopwatch.ElapsedMilliseconds} ms");
+
+            // 2. Attempting a failing query (Simulated Network Outage)
+            Console.WriteLine("\n[SCENARIO 2] Executing failing database query...");
+            await FetchStudentWithSafetyAsync(999999, shouldFail: true);
+
             Console.WriteLine("=================================================");
+            Console.WriteLine("[SYSTEM] Engine survived all exceptions cleanly.");
         }
 
-        static async Task<Student> FetchStudentAsync(int id, string firstName, string lastName)
+        /// <summary>
+        /// Simulates asynchronous database access wrapped in robust error handling.
+        /// </summary>
+        static async Task<Student> FetchStudentWithSafetyAsync(int studentId, bool shouldFail)
         {
-            Console.WriteLine($"[DB MOCK] Fetching student {firstName}...");
-            await Task.Delay(2000); // Simulate 2-second database latency
-            return new Student(id, firstName, lastName, "h.melli@university.edu", 3.85);
-        }
+            try
+            {
+                Console.WriteLine($"[DATABASE] Initiating query for ID: {studentId}...");
+                await Task.Delay(1500); // Simulate network latency
 
-        static async Task<Instructor> FetchInstructorAsync(string firstName, string lastName, string department)
-        {
-            Console.WriteLine($"[DB MOCK] Fetching instructor {firstName}...");
-            await Task.Delay(2000); // Simulate 2-second database latency
-            return new Instructor(firstName, lastName, "z.kaya@university.edu", department);
+                if (shouldFail)
+                {
+                    // Artificially trigger an exception to test our catch block
+                    throw new Exception("ConnectionTimeoutException: Unable to reach database cluster.");
+                }
+
+                Student student = new Student(studentId, "Husein", "Melli", "h.melli@university.edu", 3.85);
+                Console.WriteLine("[DATABASE] Success! Record retrieved.");
+                student.PrintProfile();
+                return student;
+            }
+            catch (Exception ex)
+            {
+                // Gracefully intercept the error without crashing the application
+                Console.WriteLine($"[ERROR INTERCEPTED] {ex.Message}");
+                Console.WriteLine("[FALLBACK] Returning null. System remains operational.");
+                return null;
+            }
+            finally
+            {
+                // This block ALWAYS runs, ensuring proper cleanup
+                Console.WriteLine($"[RESOURCE CLEANUP] Database connection channel closed for ID: {studentId}");
+            }
         }
     }
 }
